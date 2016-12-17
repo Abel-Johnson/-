@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="library/css/font-awesome.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+		<link rel="stylesheet" type="text/css" href="css/tool.css"/>
+		<link rel="stylesheet" type="text/css" href="css/index.css"/>
+		<script src="js/data.js"></script>
+		<script src="js/handleData.js"></script>
+		<script src="js/inner.js"></script>
+		<script src="js/tools.js"></script>
+		<script src="js/index.js"></script>
+	</head>
+	<body>
+		<div id="box">
+			<header id="header" class="clearfix">
+				<h1 id="header-title">
+					<a href="javascript:;" title="妙味云盘">妙味云盘</a>
+				</h1>
+				<!------------------------弹出提示区------------------------------>
+				<div class="tip-alert" id="topTip">
+					<i class="ico fa fa-history"></i>	
+					连接服务器超时，请稍后再试
+				</div>
+				<!--<div id="tip-success" class="tip">
+					<i class="ico circle">√</i>
+					删除文件成功
+				</div>
+				<div id="tip-warn" class="tip">
+					<i class="ico circle">!</i>
+					请选择文件
+				</div>-->
+				<!-------------------------------------------------------------->
+				
+				
+				<div id="header-info">
+					<span class="user-info">
+						<span class="user-photo"></span>
+						<i class="fa fa-angle-down"></i>
+					</span>
+					<i class="seperator"></i>
+					<a href="javascript:;" class="fa fa-sun-o setting" title="设置"></a>
+				</div>
+			</header>
+			<div id="btns">
+				<ul class="btn-tool">
+					<li class="items btn-download"><a href="javascript:;"><i class="fa fa-cloud-download"></i>下载</a></li>
+					<li class="items btn-share"><a href="javascript:;"><i class="fa fa-share-alt"></i>分享</a></li>
+					<li class="items btn-move"><a href="javascript:;"><i class="fa fa-arrows"></i>移动到</a></li>
+					<li class="items btn-rename"><a href="javascript:;"><i class="fa fa-pencil-square-o"></i>重命名</a></li>
+					<li class="items btn-del"><a href="javascript:;"><i class="fa fa-trash-o"></i>删除</a></li>
+					<li class="items btn-new"><a href="javascript:;"><i class="fa fa-folder-open-o"></i>新建文件夹</a></li>
+					<li class="items refresh btn-refresh"><a href="javascript:;"><i class="fa fa-refresh"></i></a></li>
+				</ul>
+				<ul class="btn-display">
+					<li class="items btn-exchangeSkin">
+						<a href="javascript:;">
+							<i class="fa fa-exchange"></i>
+						</a>
+					</li>
+					<li class="items btn-exchangeShow">
+						<a href="javascript:;">
+							<i class="fa fa-th-large"></i>
+							<i class="fa fa-angle-down"></i>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div id="content">
+				<div class="side-bar">
+				<!--<ul>
+					<li>
+						<h3 class="li-item" data-id="${randomId}" style="padding-left: ${(20 + 28*(handle.getAncestorArr(files, randomId).length-1))}px;">
+									<i class=" triangleIco  fa"></i><i class="treeIco folderIco fa fa-folder-o"></i>
+									${newDataObj.title}
+								</h3>
+					</li>
+				</ul>-->
+				</div>
+				<div class="main-content">
+					<div class="file-path">
+						<span class="select-all select">√</span>
+						<span id="brand-crumb" class="path-wrap">
+							<!--<span class="path-item">微云</span>
+							<i class="fa fa-angle-right"></i>
+							<span class="path-item">JS课程</span>
+							<i class="fa fa-angle-right"></i>
+							<span class="path-item">CSS课程</span>-->
+						</span>
+					</div>
+					<div class="file-container">
+						<ul id="file-part">
+							<!--<li class="file-item hover active">
+								<span class="select"></span>
+								<div class="img">
+									<i class="fa fa-folder-open-o"></i>
+								</div>
+								<div class="file-name   edit-mode">
+									<span class="file-title">HHHHHHH</span>
+									<span class="file-edit">
+										<input type = "text" class="editor"/>
+									</span>
+								</div>
+							</li>-->
+						</ul>
+						<div class="empty-content">
+							<strong>暂无文件</strong>
+							<i>请点击左上角的“上传”按钮添加</i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
