@@ -221,7 +221,7 @@ window.onload = function() {
 	
 
 //4.全选
-	t.on(selectAll, "click", function() {
+	t.on(selectAll, "click", function(ev) {
 		if(!fileItems.length) return;
 		var chooseSelectAll = t.toggleClass(selectAll,"selected");
 		Array.from(checkBoxs).forEach(function(value,index) {
@@ -366,70 +366,59 @@ window.onload = function() {
 	})
 	
 	
-	
-////8. 拖拽
-//	t.on(filePart, 'mousedown', function(ev) {
-//		if(ev.which !== 1 ) return;//如果是点着右键或中键想拖拽的 ，不行！
-//		var target = ev.target;
-//		var item = t.specialPt(target, ".file-item");//找到按下位置所在的项
-//		
-//		//如果点击的不是里边的 "被选中" 的 '项',不让他有拖拽的能力
-//		if(!(item && item.getElementsByClassName("selected").length)) return;
-//		var selectedItems = whoSelected();//获取到按下时刻，所有被选的li项
-//		
-//	//1.转换布局，把浮动布局转换成定位布局
-//		Array.from(fileItems).forEach(function(value) {
-//			value.style.left = value.offsetLeft + "px";
-//			value.style.top = value.offsetTop + "px";
-//		})
-//		Array.from(fileItems).forEach(function(value) {
-//			value.style.position = "absolute";
-//			value.style.float = "none";
-//		})
-//	//2.给被选中的元素加克隆 & 记录鼠标距各项的距离
-//		var cloneItems = Array.from(selectedItems).map(function(value) {
-//											return value.cloneNode(true);
-//										})
-//			cloneItems.forEach(function(value) {
-//											filePart.append(value);
-//											value.style.opacity = .5;
-//											value.disX = ev.clientX - value.offsetLeft;
-//											value.disY = ev.clientY - value.offsetTop;
-//										})
-//		console.log(cloneItems);
-//		
-//	//4.加拖拽
-//		var currentIndex;
-//		function dragFn(ev) {
-//			cloneItems.forEach(function(value) {
-//				value.style.left = ev.clientX - value.disX + "px";
-//				value.style.top = ev.clientY - value.disY + "px";
-//				
-//				//添加光标进入某项的特殊效果
-//				Array.from(fileItems).forEach(function(value,index) {
-//					if(ifCursorIn(ev, value)) {
-//						if(currentIndex) {
-//							fileItems[currentIndex].style.borderColor = "";
-//						}
-//						value.style.borderColor = "green";
-//						currentIndex;
-//					}
-//				})	
-//			})	
-//		}
-//		t.on(document, 'mousemove', dragFn);
-//	//5.鼠标松开
-//		function msUp(ev) {
-//			cloneItems.forEach(function(value) {
-//				filePart.removeChild(value);
-//				t.on(document, 'mousemove', dragFn);
-//				t.off(document, 'mouseup', msUp);
-//				
-//				//修改数据 --> 重新渲染
-//				
-//				
-//			})
-//		}
-//		t.on(document, 'mouseup', msUp);
-//	})
+//8. 拖拽
+	t.on(filePart, 'mousedown', function(ev) {
+		ev.preventDefault();
+		var cursorOut = false;
+		if(ev.which !== 1 ) return;//如果是点着右键或中键想拖拽的 ，不行！
+		var target = ev.target;
+		var item = t.specialPt(target, ".file-item");//找到按下位置所在的项
+		
+		//如果点击的不是里边的 "被选中" 的 '项',不让他有拖拽的能力
+		if(!(item && item.getElementsByClassName("selected").length)) return;
+		console.log("进入拖拽");
+		var selectedItems = whoSelected();//获取到按下时刻，所有被选的li项
+		var selectedIdArr = Array.from(selectedItems).map(function(value) {
+			return value.dataset.id;
+		})//获取到按下时刻，所有被选的li项的id的集合
+		
+		var circle = document.createElement("div");
+		circle.className = "amount-circle";
+//		1.光标移出当前项，加入按下时已经生成的一个小圆圈（里边显示被选择的个数）跟着光标四处移动
+		function dragMove(ev) {
+			if(!ifCursorIn(ev, item)) {
+				cursorOut = true;//移出了该项
+				document.body.append(circle);
+				circle.innerHTML = selectedItems.length;
+				
+				circle.style.left = ev.clientX + 10 + "px";
+				circle.style.top = ev.clientY + 10 + "px";
+			}
+		}
+		t.on(filePart, 'mousemove', dragMove)
+//		2，鼠标松开
+		function dragUp(ev) {
+			if(document.body.getElementsByClassName('amount-circle').length) {
+			document.body.removeChild(circle);
+			
+			var item = t.specialPt(ev.target, ".file-item");//找到松开鼠标位置所在的项
+			if(item){
+				var pid = item.dataset.id;
+				var selDatas = selectedIdArr.map(function(value) {
+					return handle.getSelfById(files, value)
+				});
+				selDatas.forEach(function(value) {
+					value.pid = pid;
+				})
+//				console.log(selDatas);
+				//重绘页面
+				treeMenu.innerHTML = inner.setTreeHtml(files, -1);
+				changeShow(currentId);
+			}
+			}
+			t.off(filePart, 'mousemove', dragMove)
+			t.off(filePart, 'mouseup', dragUp);
+		}
+		t.on(filePart, 'mouseup', dragUp);
+	})
 }
