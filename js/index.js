@@ -139,6 +139,13 @@ window.onload = function() {
 		return pos1.right > pos2.left && pos1.left < pos2.right && pos1.top < pos2.bottom && pos1.bottom > pos2.top;
 	}
 	
+	//检测光标是否进入某一项
+	function ifCursorIn(event, ele) {
+		var e = event;
+		var pos = ele.getBoundingClientRect();
+		return e.clientX > pos.left && e.clientX < pos.right && e.clientY > pos.top && e.clientY < pos.bottom;
+	}
+	
 //-------------(初始化)渲染各个区域---------
 	var currentId = 0;
 //1.树形菜单区域
@@ -184,10 +191,11 @@ window.onload = function() {
 		}
 		else if(t.specialPt(target, ".editor")) return;//点到了输入框
 	});
+	//2.点击项的其他部分，进入该目录（通过重新渲染）
 	t.on(filePart, "click", function(ev) {
 		var target = ev.target;
 		if(t.specialPt(target, ".editor") || t.specialPt(target, ".select")) return;
-		if(target = t.specialPt(target, ".file-item")) {//点到的不是单选框，
+		if(target = t.specialPt(target, ".file-item")) {//点到的不是单选框，也不是输入框的项的其他部分
 			//就跳转到下一页（即刷新页面）
 			var clickId = target.dataset.id;
 			changeShow(clickId);
@@ -293,8 +301,21 @@ window.onload = function() {
 		var item = t.specialPt(target, ".file-item");//找到按下位置所在的项
 		
 		//如果点击的是里边的 "被选中" 的 '项',不让他有框选的能力
-		if(item && item.getElementsByClassName("selected")) return;
+		if(item && item.getElementsByClassName("selected").length) return;
 		
+		//附加点击空白区域取消选择
+		var selectedItems = whoSelected();//获取到按下时刻，所有被选的li项
+		if(!item) {
+			Array.from(selectedItems).forEach(function(value,index) {
+				t.delClass(value, 'file-change');
+				t.delClass(checkBoxs[index], 'selected');
+			})
+		}
+		//最后把全选框的对号去掉
+		t.delClass(selectAll, "selected");//把全选框去掉
+		
+		
+		//创建框
 		var square = document.createElement("li");
 		square.className = "square";
 
@@ -312,8 +333,10 @@ window.onload = function() {
 		function cursorMove(ev) {
 			ev.preventDefault();
 			if(Math.abs(ev.clientX - oriX) < 15 && Math.abs(ev.clientY - oriY) < 15 ) return;
-			filePart.appendChild(square);
-			if(ev.clientX < disX || ev.clientX > document.documentElement.innerWidth || ev.clientY > disY || ev.clientY > document.documentElement.innerHeight) return;
+			filePart.appendChild(square);//只有鼠标移动距离大于15px时才把他append到网页中
+			
+			if(ev.clientX < disX || ev.clientX > document.documentElement.clientWidth - 20 || ev.clientY < disY || ev.clientY > document.documentElement.clientHeight ) return;//把生成的框限制在文件可视区框里
+			
 			square.style.width = Math.abs(ev.clientX - oriX) + "px";
 			square.style.height = Math.abs(ev.clientY - oriY) + "px";
 			square.style.left = Math.min(oriX, ev.clientX)-disX + "px";
@@ -328,6 +351,7 @@ window.onload = function() {
 					t.delClass(checkBoxs[i], 'selected');
 				};
 			}
+			
 			checkIfSelAll();
 		}
 		function cursorDispear(ev) {
@@ -346,28 +370,69 @@ window.onload = function() {
 	
 	
 	
-//8. 拖拽
+////8. 拖拽
 //	t.on(filePart, 'mousedown', function(ev) {
-////			console.log("开始拖拽");
+//		if(ev.which !== 1 ) return;//如果是点着右键或中键想拖拽的 ，不行！
 //		var target = ev.target;
-//		var item = t.specialPt(target, ".file-item");
-//		if(item && t.hasClass(item.getElementsByClassName("select")[0],'selected') ) {//判断当鼠标按下在被选中的item上时，再触发拖拽事件
-//			//1.转换布局，把浮动布局转换成定位布局
-//			
-//			
-//			
-//			
-//			console.log("按住");
-//			//添加鼠标移动事件，会让被选中的项随鼠标move而移动
-//			t.on(filePart, 'mousemove', cursorMove);
-//			
-//			//添加鼠标抬起事件， 会清除掉鼠标移动事件和鼠标抬起事件
-//			t.on(filePart, 'mouseup', cursorDispear);
+//		var item = t.specialPt(target, ".file-item");//找到按下位置所在的项
+//		
+//		//如果点击的不是里边的 "被选中" 的 '项',不让他有拖拽的能力
+//		if(!(item && item.getElementsByClassName("selected").length)) return;
+//		var selectedItems = whoSelected();//获取到按下时刻，所有被选的li项
+//		
+//	//1.转换布局，把浮动布局转换成定位布局
+//		Array.from(fileItems).forEach(function(value) {
+//			value.style.left = value.offsetLeft + "px";
+//			value.style.top = value.offsetTop + "px";
+//		})
+//		Array.from(fileItems).forEach(function(value) {
+//			value.style.position = "absolute";
+//			value.style.float = "none";
+//		})
+//	//2.给被选中的元素加克隆 & 记录鼠标距各项的距离
+//		var cloneItems = Array.from(selectedItems).map(function(value) {
+//											return value.cloneNode(true);
+//										})
+//			cloneItems.forEach(function(value) {
+//											filePart.append(value);
+//											value.style.opacity = .5;
+//											value.disX = ev.clientX - value.offsetLeft;
+//											value.disY = ev.clientY - value.offsetTop;
+//										})
+//		console.log(cloneItems);
+//		
+//	//4.加拖拽
+//		var currentIndex;
+//		function dragFn(ev) {
+//			cloneItems.forEach(function(value) {
+//				value.style.left = ev.clientX - value.disX + "px";
+//				value.style.top = ev.clientY - value.disY + "px";
+//				
+//				//添加光标进入某项的特殊效果
+//				Array.from(fileItems).forEach(function(value,index) {
+//					if(ifCursorIn(ev, value)) {
+//						if(currentIndex) {
+//							fileItems[currentIndex].style.borderColor = "";
+//						}
+//						value.style.borderColor = "green";
+//						currentIndex;
+//					}
+//				})	
+//			})	
 //		}
+//		t.on(document, 'mousemove', dragFn);
+//	//5.鼠标松开
+//		function msUp(ev) {
+//			cloneItems.forEach(function(value) {
+//				filePart.removeChild(value);
+//				t.on(document, 'mousemove', dragFn);
+//				t.off(document, 'mouseup', msUp);
+//				
+//				//修改数据 --> 重新渲染
+//				
+//				
+//			})
+//		}
+//		t.on(document, 'mouseup', msUp);
 //	})
-//	function dragMany() {
-//		var selectedItems = whoSelected();
-//		console.log(selectedItems);
-//	}
-
 }
