@@ -316,31 +316,28 @@ window.onload = function() {
 		
 		
 		//创建框
-		var square = document.createElement("li");
+		var square = document.createElement("div");
 		square.className = "square";
 
 		
 		//记录按下时的鼠标的相对位置
 		var oriX = ev.clientX;
 		var oriY = ev.clientY;
-		var disX = filePart.getBoundingClientRect().left;
-		var disY = filePart.getBoundingClientRect().top;
-		square.style.left = oriX-disX + "px";
-		square.style.top = oriY-disY + "px";
+		square.style.left = oriX + "px";
+		square.style.top = oriY + "px";
 		
 
 		
 		function cursorMove(ev) {
 			ev.preventDefault();
 			if(Math.abs(ev.clientX - oriX) < 15 && Math.abs(ev.clientY - oriY) < 15 ) return;
-			filePart.appendChild(square);//只有鼠标移动距离大于15px时才把他append到网页中
+			document.body.appendChild(square);//只有鼠标移动距离大于15px时才把他append到网页中
 			
-			if(ev.clientX < disX || ev.clientX > document.documentElement.clientWidth - 20 || ev.clientY < disY || ev.clientY > document.documentElement.clientHeight ) return;//把生成的框限制在文件可视区框里
 			
 			square.style.width = Math.abs(ev.clientX - oriX) + "px";
 			square.style.height = Math.abs(ev.clientY - oriY) + "px";
-			square.style.left = Math.min(oriX, ev.clientX)-disX + "px";
-			square.style.top = Math.min(oriY, ev.clientY)-disY + "px";
+			square.style.left = Math.min(oriX, ev.clientX) + "px";
+			square.style.top = Math.min(oriY, ev.clientY) + "px";
 			
 			for (var i = 0; i < fileItems.length; i++) {
 				if(isknock(square, fileItems[i])){
@@ -356,8 +353,8 @@ window.onload = function() {
 		}
 		function cursorDispear(ev) {
 			t.off(document, 'mousemove', cursorMove);
-			if(filePart.getElementsByClassName("square")[0]){
-				filePart.removeChild(square);
+			if(document.body.getElementsByClassName("square")[0]){
+				document.body.removeChild(square);
 			}
 			t.off(document, 'mouseup', cursorDispear);
 		}

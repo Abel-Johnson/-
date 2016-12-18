@@ -339,11 +339,6 @@ body {
   position: relative;
   height: 100%;
 }
-#content .main-content .file-container #file-part .square {
-  border: 1px dotted #000;
-  position: absolute;
-  background-color: rgba(0, 112, 255, 0.1);
-}
 #content .main-content .file-container .empty-content {
   display: none;
   padding-top: 152px;
@@ -367,4 +362,9 @@ body {
   font-size: 14px;
   font-style: normal;
   display: block;
+}
+.square {
+  border: 1px dotted #000;
+  position: absolute;
+  background-color: rgba(0, 112, 255, 0.1);
 }
