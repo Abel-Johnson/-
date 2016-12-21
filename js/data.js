@@ -53,6 +53,11 @@ var data = {
 			title:"我的图片"
 		},
 		{
+			id:2444,
+			pid:244444,
+			title:"壁纸"
+		},
+		{
 			id:3,
 			pid:2,
 			title:"周杰伦"

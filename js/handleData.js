@@ -40,7 +40,7 @@ var handle = {
 	getChildrenByIdArr(dataArr, idArr) {
 		var arr = [];
 		idArr.forEach(function(value) {
-			arr = arr.concat(handle.getChildrenById(dataArr, value))
+			arr = arr.concat(handle.getChildrenById(dataArr, value));
 		})
 		return arr;
 	},

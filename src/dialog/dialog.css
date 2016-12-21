@@ -1,0 +1,81 @@
+a{
+	text-decoration: none;
+	color: #000000;
+}
+h3,
+p{
+	margin: 0;
+}
+.tip-box {
+	font-family: 'Microsoft Yahei';
+	width: 400px;
+	border: 2px solid #55addc;
+	border-radius: 10px;
+	background-color: white;
+	position: absolute;
+	left: 0;
+	top: 0;
+	padding:0 20px 20px 20px;
+	position: relative;
+}
+.tip-box .tb-head{
+	height: 35px;
+	line-height: 35px;
+}
+.tip-box .tb-head h3{
+	margin: 0;
+	font-size: 16px;
+	color: #000000;
+	font-weight: normal;
+	float: left;
+}
+.tip-box .tb-head .close{
+	font-family: fantasy;
+	position: absolute;
+	right: 16px;
+   top: 16px;
+	font-style: normal;
+	color: #55addc;
+	/*font-weight: bolder;*/
+	margin-top: -10px;
+	font-size: 30px;
+}
+.tip-box .tb-btns {
+	text-align: right;
+	word-spacing: 10px;
+	margin-top: 20px;
+}
+/*.tip-box .tb-btns:after{
+	content: "";
+	display: block;
+	clear: both;
+}*/
+.tip-box .tb-btns .btn{
+	/*float: right;*/
+	width: 80px;
+	height: 28px;
+	border: 1px solid #55addc;
+	display: inline-block;
+	border-radius: 2px;
+	line-height: 28px;
+	text-align: center;
+}
+.tip-box .tb-btns .errorTip {
+	float: left;
+	color: red;
+  font-size: 12px;
+  line-height: 30px;
+}
+.tip-box .tb-btns .btn:hover{
+	background-color: #55addc;
+	color: white;
+}
+.tip-box .tb-content{
+	text-align: center;
+}
+.tip-box .tb-content:after{
+	content: "";
+	clear: both;
+	display: block;
+}
+
