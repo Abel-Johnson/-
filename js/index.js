@@ -243,6 +243,7 @@ window.onload = function() {
 
 //5.新建文件夹
 	t.on(newFolderBtn, "mouseup", function() {
+		if(isDraging) return;//如果正在拖拽就不要让该按钮有作用
 		var newFitem = inner.createFolderEle();
 		var firstF = fileItems[0];
 		//新建好以后塞到父级容器里
@@ -389,8 +390,8 @@ window.onload = function() {
 		t.on(document, 'mouseup', cursorDispear);
 	})
 //8. 拖拽
+	var isDraging = false;
 	t.on(filePart, 'mousedown', function(ev) {
-		var cursorOut = false;
 		if(ev.which !== 1 ) return;//如果是点着右键或中键想拖拽的 ，不行！
 		var target = ev.target;
 		var item = t.specialPt(target, ".file-item");//找到按下位置所在的项
@@ -407,40 +408,59 @@ window.onload = function() {
 		circle.className = "amount-circle";
 //		1.光标移出当前项，加入按下时已经生成的一个小圆圈（里边显示被选择的个数）跟着光标四处移动
 		function dragMove(ev) {
-			if(!ifCursorIn(ev, item)) {
-				cursorOut = true;//移出了该项
+			isDraging = true;
+			if(!document.body.getElementsByClassName("amount-circle").length && ifCursorIn(ev, item)) return;
 				document.body.append(circle);
 				circle.innerHTML = selectedItems.length;
 				
 				circle.style.left = ev.clientX + 10 + "px";
 				circle.style.top = ev.clientY + 10 + "px";
-			}
 		}
-		t.on(filePart, 'mousemove', dragMove)
+		t.on(document, 'mousemove', dragMove)
 //		2，鼠标松开
 		function dragUp(ev) {
+			isDraging = false;
 			if(document.body.getElementsByClassName('amount-circle').length) {
-			document.body.removeChild(circle);
-			
-			var item = t.specialPt(ev.target, ".file-item");//找到松开鼠标位置所在的项
-			if(item){
-				var pid = item.dataset.id;
-				var selDatas = selectedIdArr.map(function(value) {
-					return handle.getSelfById(files, value)
-				});
-				selDatas.forEach(function(value) {
-					value.pid = pid;
-				})
-//				console.log(selDatas);
-				//重绘页面
-				treeMenu.innerHTML = inner.setTreeHtml(files, -1);
-				changeShow(currentId);
+				document.body.removeChild(circle);
+				
+				var selectItemArr = whoSelected();
+				var selectItemIdArr = selectItemArr.map(function(value) {
+					return value.dataset.id;
+				});	
+				
+				var item = t.specialPt(ev.target, ".file-item");//找到松开鼠标位置所在的项
+				if(item && !(selectItemArr.findIndex(function(value){
+					console.log(value,item);
+					return value == item;
+				})+1)){
+					var allMoved = true;
+					selectItemIdArr.forEach(function(value,index) {
+					var self = handle.getSelfById(files, value); //获取到当前项对应的数据对象
+					var nowId = item.dataset.id;
+					var isExist = handle.isExistTitle(files, nowId, self.title);
+					if(!isExist) { 
+						//如果不存在,则正是我们需要的,改pid,然后把该元素从文件夹区remove掉
+						self.pid = nowId;
+						filePart.removeChild(selectItemArr[index]);
+					} else {
+//								如果当前遍历到的项的title存在,就意味着该项的移动必然是不成功的,所以就不满足'所有项都被成功移动'了,就要把表状态的'开关'改成false,加开关的作用是:
+//								如果没有全部移动成功,要弹出顶部横幅
+							
+							allMoved = false;
+						}
+					})
+					if( !allMoved ) {
+						topTipFn("warn", "部分文件移动失败(不能重名)");
+					}
+					//重绘页面
+					treeMenu.innerHTML = inner.setTreeHtml(files, -1);
+					t.addClass(getTreeItemById(currentId), "li-selected")
+				}
 			}
-			}
-			t.off(filePart, 'mousemove', dragMove)
-			t.off(filePart, 'mouseup', dragUp);
+			t.off(document, 'mousemove', dragMove)
+			t.off(document, 'mouseup', dragUp);
 		}
-		t.on(filePart, 'mouseup', dragUp);
+		t.on(document, 'mouseup', dragUp);
 	})
 //9.移动到(弹框)
 	/*
@@ -658,5 +678,3 @@ window.onload = function() {
 }
 
 
-//BUG:
-//点击空白区域,虽然表面上去掉了已选项的样式,但是鼠标滑过后,样式还会还原到选中的状态（已解决)
