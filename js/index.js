@@ -196,7 +196,6 @@ window.onload = function() {
 			t.toggleClass(target, 'selected');
 			checkIfSelAll();
 		}
-		else if(t.specialPt(target, ".editor")) return;//点到了输入框
 	});
 	//2.点击项的其他部分，进入该目录（通过重新渲染）
 	t.on(filePart, "click", function(ev) {
@@ -326,14 +325,15 @@ window.onload = function() {
 		//如果点击的是里边的 "被选中" 的 '项',不让他有框选的能力
 		if(item && item.getElementsByClassName("selected").length) return;
 		
-		//附加点击空白区域取消选择
+		//附加功能:点击空白区域取消选择
 		var selectedItems = whoSelected();//获取到按下时刻，所有被选的li项
 		if(!item) {
 			Array.from(selectedItems).forEach(function(value,index) {
 				t.delClass(value, 'file-change');
-				t.delClass(checkBoxs[index], 'selected');
+				t.delClass(value.getElementsByClassName("select")[0], 'selected');
 			})
 		}
+		
 		//最后把全选框的对号去掉
 		t.delClass(selectAll, "selected");//把全选框去掉
 		
@@ -659,4 +659,4 @@ window.onload = function() {
 
 
 //BUG:
-//点击空白区域,虽然表面上去掉了已选项的样式,但是鼠标滑过后,样式还会还原到选中的状态
+//点击空白区域,虽然表面上去掉了已选项的样式,但是鼠标滑过后,样式还会还原到选中的状态（已解决)
