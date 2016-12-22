@@ -398,7 +398,7 @@ window.onload = function() {
 		
 		//如果点击的不是里边的 "被选中" 的 '项',不让他有拖拽的能力
 		if(!(item && item.getElementsByClassName("selected").length)) return;
-		console.log("进入拖拽");
+		
 		var selectedItems = whoSelected();//获取到按下时刻，所有被选的li项
 		var selectedIdArr = Array.from(selectedItems).map(function(value) {
 			return value.dataset.id;
@@ -435,14 +435,21 @@ window.onload = function() {
 				})+1)){
 					var allMoved = true;
 					selectItemIdArr.forEach(function(value,index) {
-					var self = handle.getSelfById(files, value); //获取到当前项对应的数据对象
-					var nowId = item.dataset.id;
-					var isExist = handle.isExistTitle(files, nowId, self.title);
-					if(!isExist) { 
-						//如果不存在,则正是我们需要的,改pid,然后把该元素从文件夹区remove掉
-						self.pid = nowId;
-						filePart.removeChild(selectItemArr[index]);
-					} else {
+						var self = handle.getSelfById(files, value); //获取到当前项对应的数据对象
+						var nowId = item.dataset.id;
+						var isExist = handle.isExistTitle(files, nowId, self.title);
+						if(!isExist) { 
+							//如果不存在,则正是我们需要的,改pid,然后把该元素从文件夹区remove掉
+							self.pid = nowId;
+							filePart.removeChild(selectItemArr[index]);
+							
+//////////////////////*加一个处理:把目标项的class去掉
+							t.delClass(item, 'file-change');	
+//////////////////////*处理完毕
+	
+	
+							
+						} else {
 //								如果当前遍历到的项的title存在,就意味着该项的移动必然是不成功的,所以就不满足'所有项都被成功移动'了,就要把表状态的'开关'改成false,加开关的作用是:
 //								如果没有全部移动成功,要弹出顶部横幅
 							
