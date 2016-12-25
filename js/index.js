@@ -410,7 +410,7 @@ window.onload = function() {
 		function dragMove(ev) {
 			isDraging = true;
 			if(!document.body.getElementsByClassName("amount-circle").length && ifCursorIn(ev, item)) return;
-				document.body.append(circle);
+				document.body.appendChild(circle);
 				circle.innerHTML = selectedItems.length;
 				
 				circle.style.left = ev.clientX + 10 + "px";
