@@ -15,20 +15,19 @@ body {
 #header {
   height: 66px;
   padding: 4px 20px 0;
-  border-radius: 18px 18px 0 0;
   background-color: #fff;
-  line-height: 66px;
+  line-height: 60px;
   text-align: center;
 }
 #header-title {
   width: 140px;
   float: left;
 }
+#header-title i {
+  margin-right: 10px;
+}
 #header-title a {
-  display: block;
-  padding-left: 68px;
-  background: url(../img/logo.png) 8px 14px no-repeat;
-  font-size: 18px;
+  font-size: 26px;
   color: #389cd1;
 }
 #topTip {
@@ -147,6 +146,9 @@ body {
 #btns .btn-tool .items a {
   padding: 0 20px;
 }
+#btns .btn-tool .items a:hover {
+  color: #55afe4;
+}
 #btns .btn-tool .items .fa {
   margin-right: 18px;
 }
@@ -218,7 +220,6 @@ body {
   left: 0;
   right: 0;
   background-color: #f5f8fa;
-  border-radius: 0 0 18px 18px;
 }
 #content .side-bar {
   position: absolute;
@@ -227,7 +228,6 @@ body {
   bottom: 0;
   left: 0;
   width: 258px;
-  border-right: 2px solid #e1e8ed;
 }
 #content .main-content {
   left: 260px;
