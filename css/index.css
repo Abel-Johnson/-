@@ -176,7 +176,6 @@ body {
 .side-bar {
   overflow: auto;
   background-color: #fff;
-  border-radius: 8px;
 }
 .side-bar ul {
   color: #66757f;
