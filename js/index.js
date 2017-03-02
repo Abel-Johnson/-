@@ -675,7 +675,6 @@ window.onload = function() {
 			}
 		}
 		//转换表现
-		console.log("2222");
 		t.delClass(rn_obj.fileNameBox, "edit-mode");
 		t.delClass(rn_obj.tgItem, 'file-change');
 		t.delClass(rn_obj.tgItem.getElementsByClassName("select")[0], 'selected');

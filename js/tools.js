@@ -80,17 +80,6 @@ var t = (function() {
 				
 			})
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	}
 	return methods;
 })()
