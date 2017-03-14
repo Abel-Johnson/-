@@ -6,13 +6,13 @@
 			var sonsData = handle.getSonsById(data, id);
 			sonsData.forEach(function(value) {
 				str += `<li>
-										<h3 class="li-item" data-id="${value.id}" style="padding-left: ${(20 + 28*(handle.getAncestorsById(data, value.id).length-1))}px;">
-											<i class=" triangleIco  fa ${handle.getSonsById(data, value.id).length? `fa-caret-down`:``}"></i>
-											<i class="treeIco folderIco fa fa-folder-o"></i>
-											${value.title}
-										</h3>
-										${inner.setTreeHtml(data, value.id)}
-								</li>`
+							<h3 class="li-item" data-id="${value.id}" style="padding-left: ${(20 + 28*(handle.getAncestorsById(data, value.id).length-1))}px;">
+								<i class=" triangleIco  fa ${handle.getSonsById(data, value.id).length? `fa-caret-down`:``}"></i>
+								<i class="treeIco folderIco fa fa-folder-o"></i>
+								${value.title}
+							</h3>
+							${inner.setTreeHtml(data, value.id)}
+						</li>`
 			})
 			str += "</ul>";
 			return str;
